@@ -39,12 +39,14 @@ const ROVER_METADATA = {
 // Astronomy picture of the day
 app.get('/apod', async (req, res) => {
     try {
-        const response = await fetch(`https://science.nasa.gov/wp-json/wp/v2/apod-basic/`)
+        const response = await fetch(`https://science.nasa.gov/wp-json/wp/v2/apod-basic`)
+        console.log(response)
         const data = await response.json()
         const image = Array.isArray(data) ? data[0] : (data.image ? (Array.isArray(data.image) ? data.image[0] : data.image) : data)
         res.json({ image })
     } catch (err) {
         console.log('error:', err);
+        res.status(500).json({ error: 'Failed to fetch APOD' })
     }
 })
 
@@ -68,6 +70,7 @@ app.get('/rovers/:rover', async (req, res) => {
         res.json({ meta, photos })
     } catch (err) {
         console.log('error:', err);
+        res.status(500).json({ error: 'Failed to fetch rover photos' })
     }
 })
 
