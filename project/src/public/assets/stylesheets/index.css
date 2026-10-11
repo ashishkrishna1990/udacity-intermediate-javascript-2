@@ -19,6 +19,19 @@ main {
   padding: 20px;
 }
 
+.tab-btn {
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  background-color: #f1f5f9;
+  cursor: pointer;
+}
+
+.tab-btn:hover {
+  background-color: #ccc;
+  color: #fff;
+}
+
 footer {
   /* footer styles */
   text-align: center;

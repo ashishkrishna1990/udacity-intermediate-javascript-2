@@ -101,9 +101,7 @@ const Greeting = (name) => {
 // Pure function that renders list of rovers
 const RoversList = (rovers) => {
     return `
-        <ul>
-            ${rovers.map(rover => `<li onclick="getRoverData('${rover}')">${rover}</li>`).join('')}
-        </ul>
+        ${rovers.map(rover => `<button class="tab-btn" onclick="getRoverData('${rover}')">${rover}</button>`).join('')}
     `
 }
 
