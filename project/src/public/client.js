@@ -8,6 +8,8 @@ let store = Immutable.Map({
     user: Immutable.Map({ name: "Student" }),
     apod: Immutable.Map(),
     rovers: Immutable.List(['Curiosity', 'Opportunity', 'Spirit']),
+    activeRover: 'Curiosity',
+    roverData: Immutable.Map()
 })
 
 // add our markup to the page
@@ -32,6 +34,8 @@ const App = (state) => {
     const user = state.get('user')
     const rovers = state.get('rovers')
     const apod = state.get('apod')
+    const activeRover = state.get('activeRover')
+    const roverData = state.get('roverData')
 
     return `
         <header>
@@ -43,6 +47,18 @@ const App = (state) => {
                 <div>
                     <p>These are the list of the rovers that have landed on Mars.</p>
                     ${RoversList(rovers)}
+                </div>
+            </section>
+            <section>
+                <h3>About ${activeRover}</h3>
+                <div>
+                    <p>Name: ${roverData.get('meta').get('name')}</p>
+                    <p>Launch Date: ${roverData.get('meta').get('launch_date')}</p>
+                    <p>Landing Date: ${roverData.get('meta').get('landing_date')}</p>
+                    <p>Status: ${roverData.get('meta').get('status')}</p>
+                </div>
+                <div>
+                    ${DisplayRoverPhotos(roverData.get('photos'))}
                 </div>
             </section>
             <section>
@@ -91,6 +107,15 @@ const RoversList = (rovers) => {
     `
 }
 
+// Display rover photos
+const DisplayRoverPhotos = (photos) => {
+    return `
+        <div>
+            ${photos.map(photo => `<img src="${photo.get('img_src')}" height="350px" width="100%" />`).join('')}
+        </div>
+    `
+}
+
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
 
@@ -131,12 +156,20 @@ const getImageOfTheDay = async () => {
 }
 
 // API call to get rover data
-const getRoverData = (rover) => {
-
+const getRoverData = async (rover) => {
+    try {
+        const response = await fetch(`http://localhost:3000/rovers/${rover}`)
+        const data = await response.json()
+        updateStore(store, Immutable.Map({ roverData: Immutable.fromJS(data), activeRover: rover }))
+        console.log(store)
+    } catch (error) {
+        console.error("Error fetching rover data:", error)
+    }
 }
 
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
-    getImageOfTheDay(store)
+    getRoverData('Curiosity')
+    getImageOfTheDay()
     render(root, store)
 })
