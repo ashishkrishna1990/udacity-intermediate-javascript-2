@@ -9,6 +9,9 @@ body {
 
 header {
   /* header styles */
+  text-align: center;
+  padding: 20px;
+  background: #f1f5f9;
 }
 
 main {
@@ -18,6 +21,9 @@ main {
 
 footer {
   /* footer styles */
+  text-align: center;
+  padding: 20px;
+  background: #f1f5f9;
 }
 
 /* -------------------  TABLET  --------------------- */
