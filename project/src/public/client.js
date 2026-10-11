@@ -49,18 +49,7 @@ const App = (state) => {
                     ${RoversList(rovers)}
                 </div>
             </section>
-            <section>
-                <h3>About ${activeRover}</h3>
-                <div>
-                    <p>Name: ${roverData.get('meta').get('name')}</p>
-                    <p>Launch Date: ${roverData.get('meta').get('launch_date')}</p>
-                    <p>Landing Date: ${roverData.get('meta').get('landing_date')}</p>
-                    <p>Status: ${roverData.get('meta').get('status')}</p>
-                </div>
-                <div>
-                    ${DisplayRoverPhotos(roverData.get('photos'))}
-                </div>
-            </section>
+            ${RoverSection(roverData, activeRover)}
             <section>
                 <h3>Astronomy picture of the day</h3>
                 <div>
@@ -105,11 +94,43 @@ const RoversList = (rovers) => {
     `
 }
 
+// Pure function component for Rover Info & Gallery
+const RoverSection = (roverData, activeRover) => {
+    const meta = roverData.get('meta')
+    const photos = roverData.get('photos')
+
+    if (!meta || !photos) {
+        return `
+            <section class="rover-details">
+                <h3>About ${activeRover}</h3>
+                <p>Loading rover data and photos...</p>
+            </section>
+        `
+    }
+
+    return `
+        <section class="rover-details">
+            <h3>About ${activeRover}</h3>
+            <div class="rover-meta">
+                <p><strong>Name:</strong> ${meta.get('name')}</p>
+                <p><strong>Launch Date:</strong> ${meta.get('launch_date')}</p>
+                <p><strong>Landing Date:</strong> ${meta.get('landing_date')}</p>
+                <p><strong>Status:</strong> ${meta.get('status')}</p>
+            </div>
+            ${DisplayRoverPhotos(photos)}
+        </section>
+    `
+}
+
 // Display rover photos
 const DisplayRoverPhotos = (photos) => {
     return `
-        <div>
-            ${photos.map(photo => `<img src="${photo.get('img_src')}" height="350px" width="100%" />`).join('')}
+        <div class="gallery">
+            ${photos.map(photo => `
+                <div class="gallery-item">
+                    <img src="${photo.get('img_src')}" alt="${photo.get('title') || 'Mars Rover Image'}" />
+                </div>
+            `).join('')}
         </div>
     `
 }
@@ -119,7 +140,7 @@ const ImageOfTheDay = (apod) => {
 
     const image = apod.get('image')
 
-    if (image === null || image.isEmpty()) {
+    if (!image || image.isEmpty()) {
         return `<p>Loading Astronomy Picture of the Day...</p>`
     }
 
