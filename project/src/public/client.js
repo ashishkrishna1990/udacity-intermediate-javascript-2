@@ -94,6 +94,18 @@ const RoversList = (rovers) => {
     `
 }
 
+// Higher Order Function
+const formatRoverDetail = (label) => (value) => {
+    return `<p><strong>${label}:</strong> ${value || 'N/A'}</p>`
+}
+
+// Derived functions
+const formatName = formatRoverDetail('Name')
+const formatLaunchDate = formatRoverDetail('Launch Date')
+const formatLandingDate = formatRoverDetail('Landing Date')
+const formatStatus = formatRoverDetail('Status')
+
+
 // Pure function component for Rover Info & Gallery
 const RoverSection = (roverData, activeRover) => {
     const meta = roverData.get('meta')
@@ -112,10 +124,10 @@ const RoverSection = (roverData, activeRover) => {
         <section class="rover-details">
             <h3>About ${activeRover}</h3>
             <div class="rover-meta">
-                <p><strong>Name:</strong> ${meta.get('name')}</p>
-                <p><strong>Launch Date:</strong> ${meta.get('launch_date')}</p>
-                <p><strong>Landing Date:</strong> ${meta.get('landing_date')}</p>
-                <p><strong>Status:</strong> ${meta.get('status')}</p>
+                ${formatName(meta.get('name'))}
+    ${formatLaunchDate(meta.get('launch_date'))}
+    ${formatLandingDate(meta.get('landing_date'))}
+    ${formatStatus(meta.get('status'))}
             </div>
             ${DisplayRoverPhotos(photos)}
         </section>
@@ -168,7 +180,7 @@ const getImageOfTheDay = async () => {
         const response = await fetch(`http://localhost:3000/apod`)
         const data = await response.json()
         updateStore(store, Immutable.Map({ apod: Immutable.fromJS(data) }))
-        console.log(store)
+        // console.log(store)
     } catch (error) {
         console.error("Error fetching image of the day:", error)
     }
@@ -180,7 +192,7 @@ const getRoverData = async (rover) => {
         const response = await fetch(`http://localhost:3000/rovers/${rover}`)
         const data = await response.json()
         updateStore(store, Immutable.Map({ roverData: Immutable.fromJS(data), activeRover: rover }))
-        console.log(store)
+        // console.log(store)
     } catch (error) {
         console.error("Error fetching rover data:", error)
     }

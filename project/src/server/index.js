@@ -40,12 +40,12 @@ const ROVER_METADATA = {
 app.get('/apod', async (req, res) => {
     try {
         const response = await fetch(`https://science.nasa.gov/wp-json/wp/v2/apod-basic`)
-        console.log(response)
+        // console.log(response)
         const data = await response.json()
         const image = Array.isArray(data) ? data[0] : (data.image ? (Array.isArray(data.image) ? data.image[0] : data.image) : data)
         res.json({ image })
     } catch (err) {
-        console.log('error:', err);
+        // console.log('error:', err);
         res.status(500).json({ error: 'Failed to fetch APOD' })
     }
 })
@@ -63,7 +63,7 @@ const getRecentPhotos = (items, limit = 9) => items.slice(0, limit).map(formatRo
 // Mars rover photos
 app.get('/rovers/:rover', async (req, res) => {
     const rover = req.params.rover.toLowerCase()
-    console.log(req.params.rover)
+    // console.log(req.params.rover)
     const meta = ROVER_METADATA[rover] || { name: req.params.rover, launch_date: 'N/A', landing_date: 'N/A', status: 'Unknown' }
     try {
         const response = await fetch(`https://images-api.nasa.gov/search?q=${encodeURIComponent(req.params.rover)}%20rover&media_type=image`)
@@ -72,7 +72,7 @@ app.get('/rovers/:rover', async (req, res) => {
         const photos = getRecentPhotos(data.collection.items)
         res.json({ meta, photos })
     } catch (err) {
-        console.log('error:', err);
+        // console.log('error:', err);
         res.status(500).json({ error: 'Failed to fetch rover photos' })
     }
 })
