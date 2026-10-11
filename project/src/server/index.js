@@ -57,7 +57,14 @@ app.get('/rovers/:rover', async (req, res) => {
         const response = await fetch(`https://images-api.nasa.gov/search?q=${encodeURIComponent(req.params.rover)}%20rover&media_type=image`)
         const data = await response.json()
         const items = data.collection.items
-        const photos = items.slice(0, 9)
+        const photos = items.slice(0, 9).map(p => {
+            return {
+                "title": p.data[0].title,
+                "description": p.data[0].description,
+                "date_created": p.data[0].date_created,
+                "img_src": p.links[0].href
+            }
+        })
         res.json({ meta, photos })
     } catch (err) {
         console.log('error:', err);
