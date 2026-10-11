@@ -32,6 +32,11 @@ main {
   color: #fff;
 }
 
+.tab-btn.active {
+  background-color: #0284c7;
+  color: #fff;
+}
+
 footer {
   /* footer styles */
   text-align: center;

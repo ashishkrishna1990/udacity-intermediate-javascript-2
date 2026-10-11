@@ -46,7 +46,7 @@ const App = (state) => {
                 <h3>Mars Rovers</h3>
                 <div>
                     <p>These are the list of the rovers that have landed on Mars.</p>
-                    ${RoversList(rovers)}
+                    ${RoversList(rovers, activeRover)}
                 </div>
             </section>
             ${RoverSection(roverData, activeRover)}
@@ -88,11 +88,16 @@ const Greeting = (name) => {
 }
 
 // Pure function that renders list of rovers
-const RoversList = (rovers) => {
+const RoversList = (rovers, activeRover) => {
     return `
-        ${rovers.map(rover => `<button class="tab-btn" onclick="getRoverData('${rover}')">${rover}</button>`).join('')}
+        ${rovers.map(rover => `
+            <button class="tab-btn ${rover === activeRover ? 'active' : ''}" onclick="getRoverData('${rover}')">
+                ${rover}
+            </button>
+        `).join('')}
     `
 }
+
 
 // Higher Order Function
 const formatRoverDetail = (label) => (value) => {
